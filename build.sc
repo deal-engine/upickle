@@ -308,6 +308,10 @@ object upickle extends Module{
       def scalaVersion = "3.2.2"
       def compileModuleDeps = Seq(core.js, `implicits-compat`.js)
 
+      // Fix me D:
+      override def docJar: T[PathRef] = core.jvm.docJar
+      override def scalacOptions = super.scalacOptions() ++ Seq("-language:experimental.macros", "-explain")
+
       object test extends CommonTestModule{
         def moduleDeps = super.moduleDeps ++ Seq(ujson.js.test, core.js.test)
       }
@@ -318,6 +322,9 @@ object upickle extends Module{
       def scalaVersion = "3.2.2"
       def compileModuleDeps = Seq(core.jvm, `implicits-compat`.jvm)
 
+
+      // Fix me D:
+      override def docJar: T[PathRef] = core.jvm.docJar
       override def scalacOptions = super.scalacOptions() ++ Seq("-language:experimental.macros", "-explain")
 
       object test extends CommonTestModule{
@@ -330,6 +337,10 @@ object upickle extends Module{
     trait NativeModule extends ImplicitsModule with CommonNativeModule {
       def scalaVersion = "3.2.2"
       def compileModuleDeps = Seq(core.native, `implicits-compat`.native)
+
+      // Fix me D:
+      override def docJar: T[PathRef] = core.jvm.docJar
+      override def scalacOptions = super.scalacOptions() ++ Seq("-language:experimental.macros", "-explain")
 
       object test extends CommonTestModule{
         def moduleDeps = super.moduleDeps ++ Seq(ujson.native.test, core.native.test)
@@ -351,6 +362,8 @@ object upickle extends Module{
     def scalaVersion = "3.2.2"
     def compileModuleDeps = Seq(implicits.jvm)
     def moduleDeps = Seq(ujson.jvm, upack.jvm)
+    // Fix me D:
+    override def docJar: T[PathRef] = core.jvm.docJar
 
     object test extends CommonTestModule{
       def moduleDeps =
@@ -372,6 +385,8 @@ object upickle extends Module{
     def scalaVersion = "3.2.2"
     def compileModuleDeps = Seq(implicits.js)
     def moduleDeps = Seq(ujson.js, upack.js)
+    // Fix me D:
+    override def docJar: T[PathRef] = core.jvm.docJar
 
     object test extends CommonTestModule{
       def moduleDeps = super.moduleDeps ++ Seq(core.js.test)
@@ -383,6 +398,8 @@ object upickle extends Module{
     def scalaVersion = "3.2.2"
     def compileModuleDeps = Seq(implicits.native)
     def moduleDeps = Seq(ujson.native, upack.native)
+    // Fix me D:
+    override def docJar: T[PathRef] = core.jvm.docJar
 
     object test extends CommonTestModule{
       def moduleDeps = super.moduleDeps ++ Seq(core.native.test)
