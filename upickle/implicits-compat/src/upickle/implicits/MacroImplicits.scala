@@ -6,7 +6,7 @@ import scala.language.higherKinds
 /**
   * Stupid hacks to work around scalac not forwarding macro type params properly
   */
-object MacroImplicits{
+object MacroImplicitsImpl2 {
   def dieIfNothing[T: c.WeakTypeTag]
   (c: scala.reflect.macros.blackbox.Context)
   (name: String) = {
@@ -38,10 +38,11 @@ object MacroImplicits{
   }
 
 }
-trait MacroImplicits extends MacrosCommon { this: upickle.core.Types =>
-  def macroR[T]: Reader[T] = macro MacroImplicits.applyR[T]
-  def macroW[T]: Writer[T] = macro MacroImplicits.applyW[T]
-  def macroRW[T]: ReadWriter[T] = macro MacroImplicits.applyRW[ReadWriter[T]]
+
+trait MacroImplicitsImpl2 extends MacrosCommon { this: upickle.core.Types =>
+  def macroR[T]: Reader[T] = macro MacroImplicitsImpl2.applyR[T]
+  def macroW[T]: Writer[T] = macro MacroImplicitsImpl2.applyW[T]
+  def macroRW[T]: ReadWriter[T] = macro MacroImplicitsImpl2.applyRW[ReadWriter[T]]
 
   def macroR0[T, M[_]]: Reader[T] = macro internal.Macros.macroRImpl[T, M]
   def macroW0[T, M[_]]: Writer[T] = macro internal.Macros.macroWImpl[T, M]

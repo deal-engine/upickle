@@ -11,7 +11,8 @@ trait WritersVersionSpecific
   extends MacrosCommon
     with upickle.core.Types
     with Annotator
-    with CaseClassReadWriters:
+    with CaseClassReadWriters
+    with MacroImplicitsImpl2:
 
   val outerThis = this
   inline def macroW[T: ClassTag](using m: Mirror.Of[T]): Writer[T] = inline m match {
