@@ -7,10 +7,11 @@ import upickle.core.{Annotator, ObjVisitor, Visitor, Abort, CurrentlyDeriving}
 import upickle.implicits.BaseCaseObjectContext
 
 trait ReadersVersionSpecific
-  extends MacrosCommon
-    with upickle.core.Types
+  extends upickle.core.Types 
+    with MacrosCommon
     with Annotator
-    with CaseClassReadWriters:
+    with CaseClassReadWriters
+    with MacroImplicitsImpl2:
 
   abstract class CaseClassReadereader[T](paramCount: Int, missingKeyCount: Long) extends CaseClassReader[T] {
     def visitors0: Product

@@ -218,6 +218,47 @@ object upickle extends Module{
     }
   }
 
+  object `implicits-compat` extends Module {
+    trait ImplicitsModule extends CommonPublishModule{
+      def compileIvyDeps = T{
+        Agg.when(!isDotty())(
+          ivy"com.lihaoyi:::acyclic:$acyclic",
+          ivy"org.scala-lang:scala-reflect:${scalaVersion()}"
+        )
+      }
+    }
+
+    object js extends JsModule
+    trait JsModule extends ImplicitsModule with CommonJsModule {
+      def scalaVersion = "2.13.10"
+      def compileModuleDeps = Seq(core.js)
+
+      object test extends CommonTestModule{
+        def moduleDeps = super.moduleDeps ++ Seq(ujson.js.test, core.js.test)
+      }
+    }
+
+    object jvm extends JvmModule
+    trait JvmModule extends ImplicitsModule with CommonJvmModule {
+      def scalaVersion = "2.13.10"
+      def compileModuleDeps = Seq(core.jvm)
+
+      object test extends CommonTestModule{
+        def moduleDeps = super.moduleDeps ++ Seq(ujson.jvm.test, core.jvm.test)
+      }
+    }
+
+    object native extends NativeModule
+    trait NativeModule extends ImplicitsModule with CommonNativeModule {
+      def scalaVersion = "2.13.10"
+      def compileModuleDeps = Seq(core.native)
+
+      object test extends CommonTestModule{
+        def moduleDeps = super.moduleDeps ++ Seq(ujson.native.test, core.native.test)
+      }
+    }
+  }
+
   object implicits extends Module {
     trait ImplicitsModule extends CommonPublishModule{
       def compileIvyDeps = T{
@@ -262,27 +303,33 @@ object upickle extends Module{
       }
     }
 
-    object js extends Cross[JsModule](scalaVersions)
-    trait JsModule extends ImplicitsModule with CommonJsModule with CrossScalaModule {
-      def compileModuleDeps = Seq(core.js)
+    object js extends JsModule
+    trait JsModule extends ImplicitsModule with CommonJsModule {
+      def scalaVersion = "3.2.2"
+      def compileModuleDeps = Seq(core.js, `implicits-compat`.js)
 
       object test extends CommonTestModule{
         def moduleDeps = super.moduleDeps ++ Seq(ujson.js.test, core.js.test)
       }
     }
 
-    object jvm extends Cross[JvmModule](scalaVersions)
-    trait JvmModule extends ImplicitsModule with CommonJvmModule with CrossScalaModule {
-      def compileModuleDeps = Seq(core.jvm)
+    object jvm extends JvmModule
+    trait JvmModule extends ImplicitsModule with CommonJvmModule {
+      def scalaVersion = "3.2.2"
+      def compileModuleDeps = Seq(core.jvm, `implicits-compat`.jvm)
+
+      override def scalacOptions = super.scalacOptions() ++ Seq("-language:experimental.macros", "-explain")
 
       object test extends CommonTestModule{
         def moduleDeps = super.moduleDeps ++ Seq(ujson.jvm.test, core.jvm.test)
       }
     }
+    
 
-    object native extends Cross[NativeModule](scalaVersions)
-    trait NativeModule extends ImplicitsModule with CommonNativeModule with CrossScalaModule {
-      def compileModuleDeps = Seq(core.native)
+    object native extends NativeModule
+    trait NativeModule extends ImplicitsModule with CommonNativeModule {
+      def scalaVersion = "3.2.2"
+      def compileModuleDeps = Seq(core.native, `implicits-compat`.native)
 
       object test extends CommonTestModule{
         def moduleDeps = super.moduleDeps ++ Seq(ujson.native.test, core.native.test)
@@ -302,7 +349,7 @@ object upickle extends Module{
   object jvm extends JvmModule
   trait JvmModule extends UpickleModule with CommonJvmModule{
     def scalaVersion = "3.2.2"
-    def compileModuleDeps = Seq(implicits.jvm(scala3))
+    def compileModuleDeps = Seq(implicits.jvm)
     def moduleDeps = Seq(ujson.jvm, upack.jvm)
 
     object test extends CommonTestModule{
@@ -323,7 +370,7 @@ object upickle extends Module{
   object js extends JsModule
   trait JsModule extends UpickleModule with CommonJsModule {
     def scalaVersion = "3.2.2"
-    def compileModuleDeps = Seq(implicits.js(scala3))
+    def compileModuleDeps = Seq(implicits.js)
     def moduleDeps = Seq(ujson.js, upack.js)
 
     object test extends CommonTestModule{
@@ -334,7 +381,7 @@ object upickle extends Module{
   object native extends NativeModule
   trait NativeModule extends UpickleModule with CommonNativeModule {
     def scalaVersion = "3.2.2"
-    def compileModuleDeps = Seq(implicits.native(scala3))
+    def compileModuleDeps = Seq(implicits.native)
     def moduleDeps = Seq(ujson.native, upack.native)
 
     object test extends CommonTestModule{

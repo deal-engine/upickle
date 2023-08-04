@@ -444,3 +444,4 @@ trait Readers extends upickle.core.Types
   implicit val JavaFloatReader: Reader[java.lang.Float] = JavaReader[Float]().create
   implicit val JavaDoubleReader: Reader[java.lang.Double] = JavaReader[Double]().create
 }
+
